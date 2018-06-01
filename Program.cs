@@ -13,17 +13,20 @@ namespace AddToMp3
         static void Main(string[] args)
         {
             //Key passed into 
-            string MyCloudCoin = System.IO.File.ReadAllText("./text.txt", Encoding.ASCII);
+            string MyCloudCoin = System.IO.File.ReadAllText("./TestDoc.txt", Encoding.ASCII);
 
             //Path pointing to the MP3 file.
-            string FilePath = "./pewUni.mp3";
+            string FilePath = "./pew.mp3";
             TagLib.File Mp3File = TagLib.File.Create(FilePath);
 
             // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
-            // By passing a the parameter TagTypes.Id3V2 
+            // By passing a the parameter TagTypes.Id3V2 we ensure the type is of Id3v2.
             TagLib.Id3v2.Tag Mp3Tag = (TagLib.Id3v2.Tag)Mp3File.GetTag(TagTypes.Id3v2);
-            // CreateAFrame(Mp3File, Mp3Tag, MyCloudCoin);
-            ReadAFrame(Mp3File, Mp3Tag, MyCloudCoin);
+
+
+
+            CreateAFrame(Mp3File, Mp3Tag, MyCloudCoin);
+            ReadAFrame(Mp3File, Mp3Tag);
             Mp3File.Save();
         }
 
@@ -37,7 +40,7 @@ namespace AddToMp3
         }
 
 
-        static void ReadAFrame(TagLib.File Mp3File, TagLib.Id3v2.Tag Mp3Tag, string MyCloudCoin)
+        static void ReadAFrame(TagLib.File Mp3File, TagLib.Id3v2.Tag Mp3Tag)
         {
             // Retreive the ID3TAG.
             // Note that the third parameter is false while reading.
