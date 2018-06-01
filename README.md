@@ -1,5 +1,5 @@
-# ConsortiumCode
-Contains code and standards for CloudCoin implementations currently in development.
+# MP3 console app
+Contains code and standards for the insertion of CloudCoins into layer 3 mpeg files.
 
 
 ## Goal
