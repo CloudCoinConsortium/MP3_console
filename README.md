@@ -48,7 +48,6 @@ TagLib.Id3v2.Tag Mp3Tag = (TagLib.Id3v2.Tag)Mp3File.GetTag(TagTypes.Id3v2);
 
 #### Create()
 Create a frame of type 'PRIV'(private), to encapsulate the data we are saving.
-'PRIV': This frame is used to contain information from a software producer that a program may use, but does not fit into the other frames.
 
 The method takes 3 arguments, 'MyCloudCoin' gets encapsulated by a newly created PRIV frame, then inserted into the ID3 tag and finnaly attached to the file.
 ```
@@ -63,7 +62,42 @@ The method takes 2 arguments, Mp3File and Mp3Tag, the method searches the file f
 ReadAFrame(Mp3File, Mp3Tag)
 ```
 
+#### References
 
+4.27.   Private frame [Link](http://id3.org/id3v2.4.0-frames)
+
+This frame is used to contain information from a software producer
+that its program uses and does not fit into the other frames. The
+frame consists of an 'Owner identifier' string and the binary data.
+The 'Owner identifier' is a null-terminated string with a URL [URL]
+containing an email address, or a link to a location where an email
+address can be found, that belongs to the organisation responsible
+for the frame. Questions regarding the frame should be sent to the
+indicated email address. The tag may contain more than one "PRIV"
+frame but only with different contents.
+
+<Header for 'Private frame', ID: "PRIV">
+Owner identifier      <text string> $00
+The private data      <binary data>
+
+### Frame Header -32 bits
+#### AAAAAAAA-AAABBCCD-EEEEFFGH-IIJJKLMM
+
+Character | Name | Bits | Note
+--- | --- | --- | ---
+**A** | Frame Sync | 11 | All MP3 frames have a sync word marker containing all 1’s (FFF/FFE) at the beginning. May help find frame length by parsing Header Block after frame sync, seeking through the file by frame-length, if there is a sync word that means that the user is in-fact working with a MP3 file.
+**B** | MPEG Audio Version ID | 2 | 2 bits following the sync word. Used to represent the MPEG version. MPEG v1 (11), MPEG v2 (10): Both 2 bit sets identify MP3.
+**C** | Layer description | 2 | Describes one of four possible layers. L1 (11),  L2 (10), L3 (01), & Reserved(00). MP3 is a Layer 3 MPEG bits should be (01).
+**D** | Protection bit | 1 |  1 designates the file is not protected. (with MP3 this is most often the value). 0 = Protected. Adds a 16 bit long checksum following the frame, to ensure data integrity, used in networks and storage devices to detect accidental changes to the data.
+**E** |  Bit Rate Index | 1 | Four bytes used to describe the frames intended bit rate. Accepts values 0000 through 1110.
+**F** | Sampling Rate Frequency | 2 | Samples of audio carried per second.
+**G** | Padding bit | 1 | 0 = frame is not padded. 1 = frame is padded.
+**H** | Private bit | 1 | Not being used.
+**I** | Channel mode | 2 | To be updated. Will not utilize.
+**J** | Mode extension | 2 | To be updated.
+**K** | Copyright | 1 | Single bit designating the copyright status of the file.
+**L** | Original | 1 | Marks the original copy of the file.
+**M** | Emphasis | 2 | Rarely used.
 
 
 
