@@ -1,0 +1,11 @@
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.csprojAssemblyReference.cache
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.csproj.CoreCompileInputs.cache
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.AssemblyInfoInputs.cache
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.AssemblyInfo.cs
+/Users/Work/Desktop/AddCloudCoinToMP3/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.deps.json
+/Users/Work/Desktop/AddCloudCoinToMP3/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.runtimeconfig.json
+/Users/Work/Desktop/AddCloudCoinToMP3/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.runtimeconfig.dev.json
+/Users/Work/Desktop/AddCloudCoinToMP3/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.dll
+/Users/Work/Desktop/AddCloudCoinToMP3/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.pdb
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.dll
+/Users/Work/Desktop/AddCloudCoinToMP3/obj/Debug/netcoreapp2.0/AddCloudCoinToMP3.pdb
