@@ -35,7 +35,7 @@ TagLib.File Mp3File = TagLib.File.Create(FilePath);
 
 #### Get_CloudCoin()
 
-Retrieve file-path to CloudCoin, store it as a string.
+Retrieve file-path to CloudCoin, store file content as a string.
 ```
 string MyCloudCoin = System.IO.File.ReadAllText("./text.txt", Encoding.ASCII);
 ```
