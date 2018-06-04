@@ -17,22 +17,22 @@ namespace AddToMp3
             //Path pointing to the MP3 & CloudCoin files.
             string Mp3Path = "./pew.mp3";
             string CCPath = "./test.txt";
-            Encoding FileEncoding = Encoding.UTF8;
+            Encoding FileEncoding = Encoding.ASCII;
 
             //Key passed into 
-            string MyCloudCoin = System.IO.File.ReadAllText(CCPath, FileEncoding);
-            string MyMp3 = System.IO.File.ReadAllText(Mp3Path, FileEncoding);
-            int length = MyCloudCoin.Length;
+            byte[] MyCloudCoin = System.IO.File.ReadAllBytes(CCPath);
+            byte[] MyMp3 = System.IO.File.ReadAllBytes(Mp3Path);
             TagLib.File Mp3File = TagLib.File.Create(Mp3Path);
 
             // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
             // By passing a the parameter TagTypes.Id3V2 we ensure the type is of Id3v2.
             TagLib.Id3v2.Tag Mp3Tag = (TagLib.Id3v2.Tag)Mp3File.GetTag(TagTypes.Id3v2);
             
-            Methods.CreateAFrame(Mp3File, Mp3Tag, MyCloudCoin, FileEncoding);
-            Methods.ReadAFrame(Mp3File, Mp3Tag, FileEncoding);
-            Mp3File.Save();
+            Methods.CreateAFrame(Mp3File, Mp3Tag, MyCloudCoin, FileEncoding); // Create private frame.
+            Methods.ReadAFrame(Mp3File, Mp3Tag, FileEncoding); // Read contents of private frame.
             Methods.ReadBytes(MyMp3, FileEncoding);
+            
+            Mp3File.Save(); // Save changes.
         }
     }
 }
