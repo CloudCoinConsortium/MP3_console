@@ -8,6 +8,7 @@
 *.o
 *.so
 *.mp3
+*.txt
 
 # Packages #
 ############
