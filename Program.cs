@@ -17,26 +17,23 @@ namespace AddToMp3
             //Path pointing to the MP3 & CloudCoin files.
             string Mp3Path = "./pew.mp3";
             string CCPath = "./CloudCoin.json";
+
+            //Define the encoding.
             Encoding FileEncoding = Encoding.ASCII;
 
-            //Key passed into 
+            //Save CloudCoin as string
             string MyCloudCoin = System.IO.File.ReadAllText(CCPath);
 
+
             TagLib.File Mp3File = TagLib.File.Create(Mp3Path);
+            TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
 
-            // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
-            // By passing a the parameter TagTypes.Ape we ensure the type is of Ape.
-
-            TagLib.Ape.Tag ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
-
-
-            // Methods.CreateAnApeFrame(ApeTag, MyCloudCoin, FileEncoding); // Create an Ape frame
-            Methods.CheckApeTag(ApeTag);
+            //Save CloudCoins to ApeTag
             Methods.SetApeTagValue(Mp3File, ApeTag, MyCloudCoin);
-            Mp3File.Save(); // Save changes.
+            Methods.Savefile(Mp3File); // Save changes.
 
-            byte[] MyMp3 = System.IO.File.ReadAllBytes(Mp3Path);
-            Methods.ReadBytes(MyMp3, FileEncoding);
+
+            Methods.ReadBytes(Mp3Path, FileEncoding);
             Methods.ReturnCloudCoins(ApeTag);
             
         }

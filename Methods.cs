@@ -13,47 +13,48 @@ namespace AddToMp3
     public class Methods
     {
         //Creates and saves a .txt ByteFile file, and outputs to the console.
-        public static void ReadBytes(byte[] file, Encoding FileEncoding){
+        public static void ReadBytes(string Mp3Path, Encoding FileEncoding){
             Console.OutputEncoding = FileEncoding; //set the console output.
-            string ByteFile = Hex.Dump(file); //Store Hex the Hex data from the Mp3 file.
+            byte[] MyMp3 = System.IO.File.ReadAllBytes(Mp3Path);
+            string ByteFile = Hex.Dump(MyMp3); //Store Hex the Hex data from the Mp3 file.
             System.IO.File.WriteAllText("./Mp3HexPrintout.txt", ByteFile); //Create a document containing Mp3 ByteFile (debugging).
-            Console.WriteLine(ByteFile); //Log
+            Console.WriteLine("ByteFile created at ./Mp3HexPrintout.txt"); //Log
         }
-        public static void CreateAnApeFrame(TagLib.Ape.Tag ApeTag, string MyCloudCoin, Encoding FileEncoding)
-        {
-            if(ApeTag.IsEmpty){
-                TagLib.Ape.Tag CloudCoinApeTag = ApeTag; //Create a new Apev2 frame. 
-                CloudCoinApeTag.SetValue("CloudCoinArea_", MyCloudCoin); //Insert the CloudCoin into the new frame
-                Console.WriteLine("ApeFrame created: " + CloudCoinApeTag); //Log 
-                Console.WriteLine("ApeFrame data: " + CloudCoinApeTag.GetItem("CloudCoins")); //Log
-            }
+        public static TagLib.Ape.Tag CheckApeTag(TagLib.File Mp3File){
+            // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
+            // By passing a the parameter TagTypes.Ape we ensure the type is of Ape.
+            TagLib.Ape.Tag ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, false);
 
-        }
-        public static void CheckApeTag(TagLib.Ape.Tag ApeTag){
-            if (ApeTag != null) { // Check for an ApeTag 
-                Console.WriteLine("ApeTag exists"  ); //Log 
+            //Check ApeTag for content
+            if (ApeTag.GetItem("CloudCoinContainer") != null) { // Check for an ApeTag 
+
+                Console.WriteLine("ApeTag exists: " ); //Log 
+                return ApeTag;
+            }else{
+                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
+                return ApeTag;
             }
+            
         }
+
         public static void SetApeTagValue(TagLib.File Mp3File, TagLib.Ape.Tag ApeTag, string MyCloudCoin){
             // Get the APEv2 tag if it exists.
             if(ApeTag != null) {
-                ApeTag.SetValue("CloudCoinArea_", MyCloudCoin);
+                ApeTag.SetValue("CloudCoinContainer", MyCloudCoin);
             }
         }
         public static void ReturnCloudCoins(TagLib.Ape.Tag ApeTag){
-            TagLib.Ape.Item item = ApeTag.GetItem("CloudCoinArea_");
-                if (item != null) {
+            TagLib.Ape.Item item = ApeTag.GetItem("CloudCoinContainer");
+            if (item != null) {
                     string CloudCoinAreaValues = item.ToString();
-                    using (FileStream fs = System.IO.File.Create("./CloudCoinPrintout.json"))
-                    {
-                        Byte[] info = new UTF8Encoding(true).GetBytes(CloudCoinAreaValues);
-                        // Add some information to the file.
-                        fs.Write(info, 0, info.Length);
-                    }
-                    Console.WriteLine(item);
-                }else{
-                    Console.WriteLine("no CloudCoins");
-                }
+                    System.IO.File.WriteAllText("./CloudCoinPrintout.json", CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
+                    Console.WriteLine("CloudCoinPrintout created at ./CloudCoinPrintout.json");
+            }else{
+                Console.WriteLine("no CloudCoins");
+            }
+        }
+        public static void Savefile(TagLib.File Mp3File){
+            Mp3File.Save();
         }
 
 
@@ -61,6 +62,29 @@ namespace AddToMp3
 
 
 // Removed Code
+
+
+                    
+                    
+                    
+                    // using (FileStream fs = System.IO.File.Create("./CloudCoinPrintout.json"))
+                    // {
+                    //     Byte[] info = new UTF8Encoding(true).GetBytes(CloudCoinAreaValues);
+                    //     // Add some information to the file.
+                    //     fs.Write(info, 0, info.Length);
+                    // }
+                    // 
+        //Method for adding an Ape frame.
+        // public static void CreateAnApeFrame(TagLib.Ape.Tag ApeTag, string MyCloudCoin, Encoding FileEncoding)
+        // {
+        //     if(ApeTag.IsEmpty){
+        //         TagLib.Ape.Tag CloudCoinApeTag = ApeTag; //Create a new Apev2 frame. 
+        //         CloudCoinApeTag.SetValue("CloudCoinContainer", MyCloudCoin); //Insert the CloudCoin into the new frame
+        //         Console.WriteLine("ApeFrame created: " + CloudCoinApeTag); //Log 
+        //         Console.WriteLine("ApeFrame data: " + CloudCoinApeTag.GetItem("CloudCoinContainer")); //Log
+        //     }
+
+        // }
 
         //     //CheckEncoding
         //     //Used for debugging.
