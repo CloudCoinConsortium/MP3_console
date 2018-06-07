@@ -9,7 +9,7 @@
 *.so
 *.mp3
 *.txt
-
+*.vscode
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source

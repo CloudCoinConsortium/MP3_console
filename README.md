@@ -62,6 +62,11 @@ The method takes 2 arguments, Mp3File and Mp3Tag, the method searches the file f
 ReadAFrame(Mp3File, Mp3Tag)
 ```
 
+
+![alt text](https://raw.githubusercontent.comCloudCoinConsortium/MP3_console/blob/master/Mp3Standard.png)
+
+
+
 ### References
 
 Private frame [Link](http://id3.org/id3v2.4.0-frames)
@@ -76,6 +81,11 @@ Id3v2 [Link](https://www.loc.gov/preservation/digital/formats/fdd/fdd000108.shtm
 
     ID3 Metadata for MP3, Version 2
     Description: Structured data chunk containing descriptive metadata about the file to which it is generally pre-pended, virtually always an MP3_FF (MP3 sound file). Referred to by its creators as an "informal standard" for a "container format," ID3v2 permits the identification of title, artist, date, genre, and more. See link.
+
+
+
+
+
 
 
 ### Frame Header -32 bits
