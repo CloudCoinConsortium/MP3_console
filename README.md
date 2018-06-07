@@ -62,7 +62,7 @@ The method takes 2 arguments, Mp3File and Mp3Tag, the method searches the file f
 ReadAFrame(Mp3File, Mp3Tag)
 ```
 
-
+![Alt text](./Mp3Standard.png?raw=true "Standard")
 ![alt text](https://raw.githubusercontent.com/CloudCoinConsortium/MP3_console/blob/master/Mp3Standard.png)
 
 
