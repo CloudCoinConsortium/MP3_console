@@ -15,7 +15,7 @@ namespace AddToMp3
         static void Main(string[] args)
         {
             //Path pointing to the MP3 & CloudCoin files.
-            string Mp3Path = "./pew.mp3";
+            string Mp3Path = "./beat.mp3";
             string CCPath = "./CloudCoin.json";
 
             //Define the encoding.

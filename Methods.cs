@@ -26,6 +26,7 @@ namespace AddToMp3
             TagLib.Ape.Tag ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, false);
 
             //Check ApeTag for content
+            ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
             if (ApeTag.GetItem("CloudCoinContainer") != null) { // Check for an ApeTag 
 
                 Console.WriteLine("ApeTag exists: " ); //Log 
@@ -34,7 +35,6 @@ namespace AddToMp3
                 ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
                 return ApeTag;
             }
-            
         }
 
         public static void SetApeTagValue(TagLib.File Mp3File, TagLib.Ape.Tag ApeTag, string MyCloudCoin){
