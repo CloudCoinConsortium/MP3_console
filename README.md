@@ -63,7 +63,7 @@ ReadAFrame(Mp3File, Mp3Tag)
 ```
 
 
-![alt text](https://raw.githubusercontent.comCloudCoinConsortium/MP3_console/blob/master/Mp3Standard.png)
+![alt text](https://raw.githubusercontent.com/CloudCoinConsortium/MP3_console/blob/master/Mp3Standard.png)
 
 
 
