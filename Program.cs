@@ -14,9 +14,10 @@ namespace AddToMp3
     {
         static void Main(string[] args)
         {
+            bool Working = true;
             //Path pointing to the MP3 & CloudCoin files.
-            string Mp3Path = "./beat.mp3";
-            string CCPath = "./CloudCoin.json";
+            string Mp3Path = Methods.ReturnMp3FilePath();
+            string CCPath = Methods.ReturnCloudCoinFilePath();
 
             //Define the encoding.
             Encoding FileEncoding = Encoding.ASCII;
@@ -28,14 +29,34 @@ namespace AddToMp3
             TagLib.File Mp3File = TagLib.File.Create(Mp3Path);
             TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
 
+            while(Working){
+                
             //Save CloudCoins to ApeTag
-            Methods.SetApeTagValue(Mp3File, ApeTag, MyCloudCoin);
-            Methods.Savefile(Mp3File); // Save changes.
+                Methods.SetApeTagValue(ApeTag, MyCloudCoin);
+                Methods.Savefile(Mp3File); // Save changes.
+                Methods.ReadBytes(Mp3Path, FileEncoding);
+                Methods.ReturnCloudCoins(ApeTag);
 
+                Console.WriteLine("Do you want to save the mp3 (y/n) ?");
+                string save = Console.ReadLine();
+                if(save == "y"){
+                    Methods.Savefile(Mp3File);
+                }
 
-            Methods.ReadBytes(Mp3Path, FileEncoding);
-            Methods.ReturnCloudCoins(ApeTag);
-            
+                Console.WriteLine("Do you want to view saved CloudCoins (y/n) ?");
+                string CanSave = Console.ReadLine();
+                if(CanSave == "y"){
+                    string StoredCloudCoins = Methods.ReturnCloudCoins(ApeTag);
+                    Console.WriteLine(StoredCloudCoins);
+                }
+
+                Console.WriteLine("Do you want to quit (y/n) ?");
+                string CanQuit = Console.ReadLine();
+                if(CanQuit == "y"){
+                    Working = false;
+                }
+            }
+
         }
     }
 }
@@ -44,4 +65,3 @@ namespace AddToMp3
             // TagLib.Id3v2.Tag Mp3Tag = (TagLib.Id3v2.Tag)Mp3File.GetTag(TagTypes.Id3v2);
             // Methods.CreateAnId3Frame(Mp3File, Mp3Tag, MyCloudCoin, FileEncoding); // Create private frame.
             // Methods.ReadAFrame(Mp3File, Mp3Tag, FileEncoding); // Read contents of private frame.
-

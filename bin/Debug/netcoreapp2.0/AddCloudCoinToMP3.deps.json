@@ -1,17 +1,23 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "1d9e2cf07465a65af19682a5f2c01796e345e8b7"
+    "signature": "659ccd2c3bbd5e87a68f2322ceb6ac340d7064b6"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.0": {
       "AddCloudCoinToMP3/1.0.0": {
         "dependencies": {
+          "System.Reactive.Windows.Forms": "4.0.0",
           "taglib-sharp-netstandard2.0": "2.1.0"
         },
         "runtime": {
           "AddCloudCoinToMP3.dll": {}
+        }
+      },
+      "System.Reactive.Windows.Forms/4.0.0": {
+        "runtime": {
+          "lib/net46/System.Reactive.Windows.Forms.dll": {}
         }
       },
       "taglib-sharp-netstandard2.0/2.1.0": {
@@ -26,6 +32,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "System.Reactive.Windows.Forms/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jtNkd4H/WWBAzjHICiHRJQfPEH7dOzYd+LxFaJb1RPLhMRIDXWLaZimxYx4wH0Op2luNjbnj3TMaw9LE2rJRkA==",
+      "path": "system.reactive.windows.forms/4.0.0",
+      "hashPath": "system.reactive.windows.forms.4.0.0.nupkg.sha512"
     },
     "taglib-sharp-netstandard2.0/2.1.0": {
       "type": "package",

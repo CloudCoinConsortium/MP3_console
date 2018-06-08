@@ -12,9 +12,10 @@
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.0/AddCloudCoinToMP3.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
+            // "console": "internalConsole",
             "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
+            // "internalConsoleOptions": "openOnSessionStart",
+            "externalConsole": true
         },
         {
             "name": ".NET Core Attach",
