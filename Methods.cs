@@ -12,7 +12,53 @@ namespace AddToMp3
 {
     public class Methods
     {
+        public static KeyboardReader reader = new KeyboardReader();
+        public static void printWelcome()
+        {
+            Console.WriteLine("");
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Out.WriteLine("                                                                  ");
+            Console.Out.WriteLine("                   CloudCoin Founders Edition                     ");
+            Console.Out.WriteLine("                      Version: June.14.2018                       ");
+            Console.Out.WriteLine("          Used to store CloudCoin stacks in mp3 files.            ");
+            Console.Out.WriteLine("      This Software is provided as is with all faults, defects    ");
+            Console.Out.WriteLine("          and errors, and without warranty of any kind.           ");
+            Console.Out.WriteLine("                Free from the CloudCoin Consortium.               ");
+            Console.Out.WriteLine("                                                                  ");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+        } // End print options
+        public static int printOptions()
+        {
+            Console.WriteLine("             ");
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Out.WriteLine("     Choose from the selection below                                 ");
+            Console.Out.WriteLine("                                                                     ");
+            Console.Out.WriteLine("     1: Select .mp3 file.                                            ");
+            Console.Out.WriteLine("     2: Select .stack file from Bank folder                          ");
+            Console.Out.WriteLine("     3: Inset the .stack file into the .mp3 file                     ");
+            Console.Out.WriteLine("     4: Return .stack from .mp3                                      ");
+            Console.Out.WriteLine("     5: Delete .stack from .mp3                                      ");        
+            Console.Out.WriteLine("     6: Save .mp3's current state                                    ");                              
+            Console.Out.WriteLine("     7: Quit                                                         ");                              
+            Console.WriteLine("         ");
+            Console.WriteLine("Enter your selection: ");
+            int choice = reader.readInt(1, 7);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            return choice;
+        } // End print welcome
         //Creates and saves a .txt ByteFile file, and outputs to the console.
+        
+        
+        
+        
+        
         public static void ReadBytes(string Mp3Path, Encoding FileEncoding){
             Console.OutputEncoding = FileEncoding; //set the console output.
             byte[] MyMp3 = System.IO.File.ReadAllBytes(Mp3Path);
@@ -21,29 +67,48 @@ namespace AddToMp3
             Console.WriteLine("ByteFile created at ./Mp3HexPrintout.txt"); //Log
         }
         public static TagLib.Ape.Tag CheckApeTag(TagLib.File Mp3File){
+            TagLib.Ape.Tag ApeTag; 
             // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
             // By passing a the parameter 'TagTypes.Ape' we ensure the type is of Ape.
-            TagLib.Ape.Tag ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
+            try
+            {
+                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, false);
+            }
+            catch
+            {
+                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
+                ApeTag.SetValue("CloudCoinStack", "");
+            }
+            
             return ApeTag;
         }
 
         public static void SetApeTagValue(TagLib.Ape.Tag ApeTag, string MyCloudCoin){
-            TagLib.Ape.Item  currentStacks = ApeTag.GetItem("CloudCoinStack");
-            MyCloudCoin += currentStacks.ToString();
             // Get the APEv2 tag if it exists.
-            ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
+            try{
+                TagLib.Ape.Item  currentStacks = ApeTag.GetItem("CloudCoinStack");
+                MyCloudCoin += currentStacks.ToString();
+                ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
+            }catch{
+                ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
+            }
+        }
+        public static void RemoveExistingStacks(TagLib.Ape.Tag ApeTag){
+            ApeTag.SetValue("CloudCoinStack", "");
+            ApeTag.SetValue("CloudCoinContainer", "");
+           
         }
 
-        public static string ReturnCloudCoinStack(TagLib.Ape.Tag ApeTag){
+        public static string ReturnCloudCoinStack(TagLib.File Mp3File){
+            TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
             TagLib.Ape.Item item = ApeTag.GetItem("CloudCoinStack");
             if (item != null) {
                     string CloudCoinAreaValues = item.ToString();
-                    System.IO.File.WriteAllText("./note1.Stack", CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
-                    Console.WriteLine("CloudCoinPrintout created at ./CloudCoinPrintout.json");
+                    System.IO.File.WriteAllText("./note1.stack", CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
                     return CloudCoinAreaValues;
             }else{
-                Console.WriteLine("no .Stack in file");
-                return "no .Stack in file";
+                Console.WriteLine("no stack in file");
+                return "no .stack in file";
             }
         }
         public static string ReturnMp3FilePath(){
@@ -58,27 +123,25 @@ namespace AddToMp3
                 return "./pew.mp3";   
             };
         }
-        public static void SaveBankStacks(TagLib.Ape.Tag ApeTag){
-            Console.WriteLine("Enter the file path to the folder with the .Stack files. )");
+        public static string SaveBankStacks(TagLib.Ape.Tag ApeTag){
+            Console.WriteLine("Enter the file path to the folder with the .Stack files. existing CloudCoins will be overwritten.)");
             // string filepath = Console.ReadLine();
 
             try 
             {
                 string[] dirs = Directory.GetFiles("./Bank", "*.stack");
-                Console.WriteLine("The number of stacks is {0}.", dirs.Length);
-                int num = 0;
+                Console.WriteLine("The number of stacks being returned is {0}.", dirs.Length);
+                string stackFile = "";
                 foreach (string dir in dirs) 
                 {   
-                    string stackFile = System.IO.File.ReadAllText(dir);
-                    Console.WriteLine("/r/n");
-                    SetApeTagValue(ApeTag, stackFile);
+                    stackFile += System.IO.File.ReadAllText(dir);
                 }
-                // return readText;
+                 return stackFile;
             } 
             catch (Exception e) 
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
-                // return e.ToString();
+                return e.ToString();
             }
         }
         public static void Savefile(TagLib.File Mp3File){

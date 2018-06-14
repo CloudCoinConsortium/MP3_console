@@ -14,37 +14,77 @@ namespace AddToMp3
     {
         static void Main(string[] args)
         {
-
-            //Path pointing to the MP3 & CloudCoin files.
-            string Mp3Path = Methods.ReturnMp3FilePath();
-            // Console.WriteLine("Path: " + CCPath);
             //Define the encoding.
             Encoding FileEncoding = Encoding.ASCII;
-            //Save CloudCoin as string
-            // string MyCloudCoin = System.IO.File.ReadAllText(CCPath);
-            TagLib.File Mp3File = TagLib.File.Create(Mp3Path);
+            string Mp3Path = Methods.ReturnMp3FilePath(); //Save file path.;
+            TagLib.File Mp3File = TagLib.File.Create(Mp3Path); //Create TagLib file... ensures a Id3v2 header.;
+            TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File); //return existing tag. create one if none.;
+            bool makingChanges = true;
+            string[] endState = new string[6];
 
-            TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
+            Methods.printWelcome();
+            while (makingChanges){
+                int userChoice = Methods.printOptions();
+                string CloudCoinStack = "";
+                switch(userChoice){
+                    case 1: //Select .mp3 file.
 
-            Methods.SaveBankStacks(ApeTag); //Select stacks to insert.
+                        Mp3Path = Methods.ReturnMp3FilePath(); //Save file path.
+                        Mp3File = TagLib.File.Create(Mp3Path); //Create TagLib file... ensures a Id3v2 header. 
+                        ApeTag = Methods.CheckApeTag(Mp3File); //return existing tag. create one if none.
 
-            Methods.Savefile(Mp3File); // Save changes.
-
-            Methods.ReturnCloudCoinStack(ApeTag);
-
-                Console.WriteLine("Do you want to save the mp3 (y/n) ?");
-                string save = Console.ReadLine();
-                if(save == "y"){
-                    Methods.Savefile(Mp3File);
+                        string fileName = Mp3File.Name;
+                        endState[0] = fileName;
+                    break;
+                    case 2://Select .stack file from Bank folder
+                        try
+                        {
+                        CloudCoinStack = Methods.SaveBankStacks(ApeTag); //Select stacks to insert. 
+                        endState[1] = ".stack copied from ./Bank";
+                        }
+                        catch
+                        {
+                        CloudCoinStack = Methods.SaveBankStacks(ApeTag); //Select stacks to insert. 
+                        endState[1] = ".stack error ";
+                        }
+                    break;
+                    case 3://Inset the .stack file into the .mp3 file 
+                        if(CloudCoinStack != null)
+                        {
+                            Methods.RemoveExistingStacks(ApeTag);
+                            Methods.SetApeTagValue(ApeTag, CloudCoinStack);
+                            endState[2] = ".stack was successfully inserted in " + Mp3File.Name;
+                        }
+                        else{
+                            Console.WriteLine("No saved cloud coin stack.");
+                        }
+                    break;
+                    case 4://Return .stack from .mp3
+                
+                        Methods.ReturnCloudCoinStack(Mp3File);
+                        Console.WriteLine("CloudCoinPrintout created at ./note1.stack");
+                        endState[3] = "A file was created './note1.stack' with the CloudCoinStack found in " + Mp3File.Name;
+                    break;
+                    case 5://Delete .stack from .mp3 
+                        Methods.RemoveExistingStacks(ApeTag);
+                        endState[4] = "Any existing stacks in " + Mp3File.Name + " have been deleted.";
+                    break;
+                    case 6://Save .mp3's current state
+                        Methods.Savefile(Mp3File); // Save changes.
+                        endState[5] = Mp3File.Name + " has been saved with the changes made";
+                    break;
+                    case 7://Quit
+                        makingChanges = false;
+                    break;
+                    default:
+                        Console.WriteLine("No matches for input!");
+                    break;
                 }
+            }
+            
 
-                Console.WriteLine("Do you want to view saved CloudCoins (y/n) ?");
-                string CanSave = Console.ReadLine();
-                // if(CanSave == "y"){
-                    // string StoredCloudCoins = Methods.ReturnCloudCoins(ApeTag);
-                    // Console.WriteLine(StoredCloudCoins);
-                // }
-
+            
+            Console.WriteLine("Do you want to save the mp3 (y/n) ?");
         }
     }
 }
