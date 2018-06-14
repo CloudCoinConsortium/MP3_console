@@ -28,20 +28,22 @@ namespace AddToMp3
         }
 
         public static void SetApeTagValue(TagLib.Ape.Tag ApeTag, string MyCloudCoin){
+            TagLib.Ape.Item  currentStacks = ApeTag.GetItem("CloudCoinStack");
+            MyCloudCoin += currentStacks.ToString();
             // Get the APEv2 tag if it exists.
-            ApeTag.SetValue("CloudCoinContainer", MyCloudCoin);
+            ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
         }
 
-        public static string ReturnCloudCoins(TagLib.Ape.Tag ApeTag){
-            TagLib.Ape.Item item = ApeTag.GetItem("CloudCoinContainer");
+        public static string ReturnCloudCoinStack(TagLib.Ape.Tag ApeTag){
+            TagLib.Ape.Item item = ApeTag.GetItem("CloudCoinStack");
             if (item != null) {
                     string CloudCoinAreaValues = item.ToString();
-                    System.IO.File.WriteAllText("./CloudCoinPrintout.json", CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
+                    System.IO.File.WriteAllText("./note1.Stack", CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
                     Console.WriteLine("CloudCoinPrintout created at ./CloudCoinPrintout.json");
                     return CloudCoinAreaValues;
             }else{
-                Console.WriteLine("no CloudCoins");
-                return "No CloudCoins";
+                Console.WriteLine("no .Stack in file");
+                return "no .Stack in file";
             }
         }
         public static string ReturnMp3FilePath(){
@@ -56,17 +58,28 @@ namespace AddToMp3
                 return "./pew.mp3";   
             };
         }
-        public static string ReturnCloudCoinFilePath(){
-        Console.WriteLine("TYPE FILEPATH TO CloudCoin OR HIT ENTER FOR DEFAULT. (./CloudCoin.json)");
-            string filepath = Console.ReadLine();
-            if (filepath != "")
-            {
-                return filepath;
+        public static void SaveBankStacks(TagLib.Ape.Tag ApeTag){
+            Console.WriteLine("Enter the file path to the folder with the .Stack files. )");
+            // string filepath = Console.ReadLine();
 
+            try 
+            {
+                string[] dirs = Directory.GetFiles("./Bank", "*.stack");
+                Console.WriteLine("The number of stacks is {0}.", dirs.Length);
+                int num = 0;
+                foreach (string dir in dirs) 
+                {   
+                    string stackFile = System.IO.File.ReadAllText(dir);
+                    Console.WriteLine("/r/n");
+                    SetApeTagValue(ApeTag, stackFile);
+                }
+                // return readText;
+            } 
+            catch (Exception e) 
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+                // return e.ToString();
             }
-            else{
-              return "./CloudCoin.json"; 
-          };
         }
         public static void Savefile(TagLib.File Mp3File){
             Mp3File.Save();
@@ -95,9 +108,9 @@ namespace AddToMp3
         // {
         //     if(ApeTag.IsEmpty){
         //         TagLib.Ape.Tag CloudCoinApeTag = ApeTag; //Create a new Apev2 frame.
-        //         CloudCoinApeTag.SetValue("CloudCoinContainer", MyCloudCoin); //Insert the CloudCoin into the new frame
+        //         CloudCoinApeTag.SetValue("CloudCoinStack", MyCloudCoin); //Insert the CloudCoin into the new frame
         //         Console.WriteLine("ApeFrame created: " + CloudCoinApeTag); //Log
-        //         Console.WriteLine("ApeFrame data: " + CloudCoinApeTag.GetItem("CloudCoinContainer")); //Log
+        //         Console.WriteLine("ApeFrame data: " + CloudCoinApeTag.GetItem("CloudCoinStack")); //Log
         //     }
 
         // }

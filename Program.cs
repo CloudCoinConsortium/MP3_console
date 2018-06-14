@@ -14,28 +14,23 @@ namespace AddToMp3
     {
         static void Main(string[] args)
         {
-            bool Working = true;
+
             //Path pointing to the MP3 & CloudCoin files.
             string Mp3Path = Methods.ReturnMp3FilePath();
-            string CCPath = Methods.ReturnCloudCoinFilePath();
-
+            // Console.WriteLine("Path: " + CCPath);
             //Define the encoding.
             Encoding FileEncoding = Encoding.ASCII;
-
             //Save CloudCoin as string
-            string MyCloudCoin = System.IO.File.ReadAllText(CCPath);
-
-
+            // string MyCloudCoin = System.IO.File.ReadAllText(CCPath);
             TagLib.File Mp3File = TagLib.File.Create(Mp3Path);
+
             TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
 
-            while(Working){
-                
-            //Save CloudCoins to ApeTag
-                Methods.SetApeTagValue(ApeTag, MyCloudCoin);
-                Methods.Savefile(Mp3File); // Save changes.
-                Methods.ReadBytes(Mp3Path, FileEncoding);
-                Methods.ReturnCloudCoins(ApeTag);
+            Methods.SaveBankStacks(ApeTag); //Select stacks to insert.
+
+            Methods.Savefile(Mp3File); // Save changes.
+
+            Methods.ReturnCloudCoinStack(ApeTag);
 
                 Console.WriteLine("Do you want to save the mp3 (y/n) ?");
                 string save = Console.ReadLine();
@@ -45,17 +40,10 @@ namespace AddToMp3
 
                 Console.WriteLine("Do you want to view saved CloudCoins (y/n) ?");
                 string CanSave = Console.ReadLine();
-                if(CanSave == "y"){
-                    string StoredCloudCoins = Methods.ReturnCloudCoins(ApeTag);
-                    Console.WriteLine(StoredCloudCoins);
-                }
-
-                Console.WriteLine("Do you want to quit (y/n) ?");
-                string CanQuit = Console.ReadLine();
-                if(CanQuit == "y"){
-                    Working = false;
-                }
-            }
+                // if(CanSave == "y"){
+                    // string StoredCloudCoins = Methods.ReturnCloudCoins(ApeTag);
+                    // Console.WriteLine(StoredCloudCoins);
+                // }
 
         }
     }
