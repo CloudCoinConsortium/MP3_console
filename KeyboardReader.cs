@@ -133,7 +133,6 @@ namespace AddToMp3
                     {
                         done = true;
                     }
-
                 }
                 catch (FormatException e)
                 {
@@ -142,12 +141,9 @@ namespace AddToMp3
                     //CoreLogger.Log(e.ToString());
                     Console.Out.Write(this.prompt);
                 }
-
             }
-
             return number;
         }
-
         public int readInt(int[] args)
         {
             int result = this.readInt();
@@ -157,7 +153,6 @@ namespace AddToMp3
                 Console.Out.Write(this.prompt);
                 result = this.readInt(args);
             }
-
             return result;
         }
 
