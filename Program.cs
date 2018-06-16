@@ -24,8 +24,7 @@ namespace AddToMp3
             bool makingChanges = true; //Keeps the session runnning.
             bool menuStyle = true;
             string[] endState = new string[6]; //Keeps the current state of each case.
-            string[] collectCloudCoinStack = new string[2];
-            string mp3CurrentCoinStack = "";
+            string[] collectCloudCoinStack = new string[3];
             Methods.printWelcome();
             int userChoice = Methods.printOptions();
 
@@ -52,30 +51,31 @@ namespace AddToMp3
                         Console.Out.WriteLine(endState[1]);
                     break;
                     case 3://Insert the .stack file into the .mp3 file 
-                    string cloudCoinStack = collectCloudCoinStack[1];
-                    Console.Out.WriteLine("Existing Stacks in the mp3 will be overwritten");
-                    Console.Out.WriteLine("Enter/Return to continue, Any other key to go back.");
-                    if(Console.ReadKey(true).Key == ConsoleKey.Enter)
-                    {
-                        if(cloudCoinStack != null && ApeTag != null)
+                        string cloudCoinStack = collectCloudCoinStack[1];
+                        string stackName = collectCloudCoinStack[2];
+                        Console.Out.WriteLine("Existing Stacks in the mp3 will be overwritten");
+                        Console.Out.WriteLine("Enter/Return to continue, Any other key to go back.");
+
+                        if(Console.ReadKey(true).Key == ConsoleKey.Enter)
                         {
-                            Console.Out.WriteLine("Existing Stacks in the mp3 will be overwritten");
-                            ApeTag = Methods.CheckApeTag(Mp3File);
-                            Methods.SetApeTagValue(ApeTag, cloudCoinStack);
-                            endState[2] = ".stack was successfully inserted in " + Mp3File.Name;
-                            endState[4] = "Stacks in " + Mp3File.Name + " have been added.";
+                            if(cloudCoinStack != null && ApeTag != null)
+                            {
+                                Console.Out.WriteLine("Existing Stacks in the mp3 will be overwritten");
+                                ApeTag = Methods.CheckApeTag(Mp3File);
+                                Methods.SetApeTagValue(ApeTag, cloudCoinStack, stackName);
+                                endState[2] = ".stack was successfully inserted in " + Mp3File.Name;
+                                endState[4] = "Stacks in " + Mp3File.Name + " have been added.";
+                            }
+                            else{
+                                Methods.SetApeTagValue(ApeTag, cloudCoinStack, stackName);
+                                endState[2] = "No saved cloud coin stack.";
+                            }
+                            Console.Out.WriteLine(endState[2]);
                         }
-                        else{
-                            Methods.SetApeTagValue(ApeTag, cloudCoinStack);
-                            endState[2] = "No saved cloud coin stack.";
-                        }
-                         Console.Out.WriteLine(endState[2]);
-                    }
                     break;
                     case 4://Return .stack from .mp3
-                
-                        mp3CurrentCoinStack = Methods.ReturnCloudCoinStack(Mp3File);
-                        endState[3] = "A file was created  with the CloudCoinStack found in " + Mp3File.Name + ".stack ";
+                        string mp3CurrentCoinStack = Methods.ReturnCloudCoinStack(Mp3File);
+                        endState[3] = "A file was created:  " + mp3CurrentCoinStack;
                         Console.Out.WriteLine(endState[3]);
                     break;
                     case 5://Delete .stack from .mp3 
@@ -121,7 +121,7 @@ namespace AddToMp3
             
 
             
-            Console.Out.WriteLine("Do you want to save the mp3 (y/n) ?");
+            Console.Out.WriteLine("Goodbye");
         }
     }
 }
