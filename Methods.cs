@@ -31,18 +31,20 @@ namespace AddToMp3
 
             // You can add a true parameter to the GetTag function if the Mp3File doesn't already have a Mp3Tag.
             // By passing a the parameter 'TagTypes.Ape' we ensure the type is of Ape.
+
             try{ 
-                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, false);
+                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true); //Adds one if none found.
                 hasCCS = ApeTag.HasItem("CloudCoinStack");
                 hasStackName = ApeTag.HasItem("StackName");
-            }catch{
-                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, true);
             }
-            
+            catch(Exception e)
+            {
+                Console.Out.WriteLine("The process failed: {0}", e.ToString());
+                ApeTag = (TagLib.Ape.Tag)Mp3File.GetTag(TagLib.TagTypes.Ape, false);
+            }
             if(!hasCCS){
                 TagLib.Ape.Item item = new TagLib.Ape.Item("CloudCoinStack","");
                 ApeTag.SetItem(item); 
-
             }
             if(!hasStackName){
                 TagLib.Ape.Item itemName = new TagLib.Ape.Item("StackName","");
@@ -59,8 +61,10 @@ namespace AddToMp3
                 ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
                 ApeTag.SetValue("StackName", stackName);
                 return true;
-            }catch{
-                ApeTag.SetValue("CloudCoinStack", MyCloudCoin);
+            }
+            catch(Exception e)
+            {
+                Console.Out.WriteLine("The process failed: {0}", e.ToString());
                 return false;
             }
         }
@@ -93,8 +97,9 @@ namespace AddToMp3
             try 
             {
                 string[] dirs = Directory.GetFiles("./mp3", "*.mp3");
+                string note = "Select the file you wish to use.";
                 consolePrintList(dirs, true, message);
-                string choice = dirs[getUserInput(dirs.Length)];
+                string choice = dirs[getUserInput(dirs.Length, note , false)];
                 return choice;
             } 
             catch (Exception e) 
@@ -114,8 +119,9 @@ namespace AddToMp3
             try 
             {
                 string[] dirs = Directory.GetFiles("./Bank", "*.stack");
+                string note = "Select the file you wish to use.";
                 consolePrintList(dirs, true, message);
-                myStack[0] = dirs[getUserInput(dirs.Length)];
+                myStack[0] = dirs[getUserInput(dirs.Length, note , false)-1];
                 myStack[1] = System.IO.File.ReadAllText(myStack[0]);
                 myStack[2] = System.IO.Path.GetFileName(myStack[0]);
                 return myStack;
@@ -128,11 +134,16 @@ namespace AddToMp3
             }
         }
 
-        public static int getUserInput(int range)
+        public static int getUserInput(int range, string message, bool anyKey)
         {     
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Enter your selection: ");
+            Console.Out.WriteLine(message);
+            if(anyKey){
+                Console.WriteLine("Press enter: ");
+                Console.ReadKey();
+            }
             int choice = reader.readInt(1, range);
+            
             return choice;
         }
 
@@ -152,7 +163,7 @@ namespace AddToMp3
                 {
                  string newFile = String.Format("{0, -25}", file);
                  string indexString = "     "+(index+1).ToString()+": ";
-                 Console.Out.WriteLine("{0,-15} {1,3:N1}", indexString, newFile);
+                 Console.Out.WriteLine("{0,-5} {1,3:N1}", indexString, newFile);
                  index++;
                 }
                 else
@@ -166,36 +177,35 @@ namespace AddToMp3
         public static void printWelcome()
         {
             string[] welcomeMsg = new string[6];
-            welcomeMsg[0] = "                   CloudCoin Founders Edition                     ";
-            welcomeMsg[1] = "                      Version: June.14.2018                       ";
-            welcomeMsg[2] = "          Used to store CloudCoin stacks in mp3 files.            ";
-            welcomeMsg[3] = "      This Software is provided as is with all faults, defects    ";
-            welcomeMsg[4] = "          and errors, and without warranty of any kind.           ";
-            welcomeMsg[5] = "                Free from the CloudCoin Consortium.               ";
+            welcomeMsg[0] = "                     CloudCoin Founders Edition                       ";
+            welcomeMsg[1] = "                        Version: June.14.2018                         ";
+            welcomeMsg[2] = "            Used to store CloudCoin stacks in mp3 files.              ";
+            welcomeMsg[3] = "        This Software is provided as is with all faults, defects      ";
+            welcomeMsg[4] = "            and errors, and without warranty of any kind.             ";
+            welcomeMsg[5] = "                  Free from the CloudCoin Consortium.                 ";
             consolePrintList(welcomeMsg, false, ""); //false? message is not indexed.
             
         } // End print options
 
         public static int printOptions()
         {
-            // string note = "message + " {0}.", selection.Length"
-            string note =    "Enter your selection.                                          ";
+             string note = "Enter your selection: ";
             string[] userChoices = new string[8];
-            userChoices[0] = "Select .mp3 file.                                             "; //Option 1
-            userChoices[1] = "Select .stack file from Bank folder.                          "; //Option 2
-            userChoices[2] = "Insert the .stack file into the .mp3 file.                    "; //Option 3
-            userChoices[3] = "Return .stack from .mp3                                       "; //Option 4
-            userChoices[4] = "Delete .stack from .mp3                                       "; //Option 5
-            userChoices[5] = "Save .mp3's current state                                     "; //Option 6
-            userChoices[6] = "Quit (remember to save!)                                      "; //Option 7
-            userChoices[7] = "Show discriptions                                             "; //Option 8
+            userChoices[0] = "Select .mp3 file.                                                     "; //Option 1
+            userChoices[1] = "Select .stack file from Bank folder.                                  "; //Option 2
+            userChoices[2] = "Insert the .stack file into the .mp3 file.                            "; //Option 3
+            userChoices[3] = "Return .stack from .mp3                                               "; //Option 4
+            userChoices[4] = "Delete .stack from .mp3                                               "; //Option 5
+            userChoices[5] = "Save .mp3's current state                                             "; //Option 6
+            userChoices[6] = "Quit (remember to save!)                                              "; //Option 7
+            userChoices[7] = "Show discriptions                                                     "; //Option 8
             consolePrintList(userChoices, true, note); //true? message is indexed.
-            return getUserInput(8);//7? Range of inputs.
+            return getUserInput(8,note,false);//7? Range of inputs.
         } // End print welcome
          public static int printHelp()
         {
             // string note = "message + " {0}.", selection.Length"
-            string note = "Enter your selection.";
+            string note = "Enter your selection: ";
             string[] userChoices = new string[8];
             userChoices[0] = "Select an .mp3 file from a list of files in the 'mp3' folder.         "; //Option 1
             userChoices[1] = "Choose a  .stack file from tge 'Bank' folder for storage in an mp3.   "; //Option 2
@@ -204,9 +214,9 @@ namespace AddToMp3
             userChoices[4] = "DELETE YOUR CLOUDCOINS (from the .mp3)                                "; //Option 5
             userChoices[5] = "Changes made to the .mp3 file will be saved                           "; //Option 6
             userChoices[6] = "End this session, this option does not save changes to the mp3 file.  "; //Option 7
-            userChoices[7] = "Standard menu"; //Option 8
+            userChoices[7] = "Standard menu                                                         "; //Option 8
             consolePrintList(userChoices, true, note); //true? message is indexed.
-            return getUserInput(8);//7? Range of inputs.
+            return getUserInput(8,note, false);//7? Range of inputs.
         } // End print welcome
 
         public static void printStates(string[] states)

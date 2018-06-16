@@ -74,9 +74,14 @@ namespace AddToMp3
                         }
                     break;
                     case 4://Return .stack from .mp3
-                        string mp3CurrentCoinStack = Methods.ReturnCloudCoinStack(Mp3File);
-                        endState[3] = "A file was created:  " + mp3CurrentCoinStack;
-                        Console.Out.WriteLine(endState[3]);
+                        if(Mp3File != null)
+                        {
+                            string mp3CurrentCoinStack = Methods.ReturnCloudCoinStack(Mp3File);
+                            endState[3] = "A file was created:  " + mp3CurrentCoinStack;
+                            Console.Out.WriteLine(endState[3]);
+                        }else{
+                            Console.Out.WriteLine("No mp3 file selected.");
+                        }
                     break;
                     case 5://Delete .stack from .mp3 
                         Console.Out.WriteLine("WARNING: you are about to permenantley delete any stack files found in " + Mp3File.Name);
