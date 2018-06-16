@@ -143,7 +143,7 @@ namespace AddToMp3
                 Console.ReadKey();
             }
             int choice = reader.readInt(1, range);
-            
+
             return choice;
         }
 
@@ -208,7 +208,7 @@ namespace AddToMp3
             string note = "Enter your selection: ";
             string[] userChoices = new string[8];
             userChoices[0] = "Select an .mp3 file from a list of files in the 'mp3' folder.         "; //Option 1
-            userChoices[1] = "Choose a  .stack file from tge 'Bank' folder for storage in an mp3.   "; //Option 2
+            userChoices[1] = "Choose a  .stack file from the 'Bank' folder for storage in an mp3.   "; //Option 2
             userChoices[2] = "Insert the .stack file into the .mp3 file.                            "; //Option 3
             userChoices[3] = "Search the SAVED mp3's data for cloudcoins, then write them to a file."; //Option 4
             userChoices[4] = "DELETE YOUR CLOUDCOINS (from the .mp3)                                "; //Option 5
