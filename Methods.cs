@@ -79,14 +79,28 @@ namespace AddToMp3
             TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
             TagLib.Ape.Item CCS = ApeTag.GetItem("CloudCoinStack");
             TagLib.Ape.Item StackN = ApeTag.GetItem("StackName");
-           
+
             if (CCS != null) {
-                    string CloudCoinAreaValues = CCS.ToString();
+                    Console.Out.WriteLine("press enter to extract this stack.");
                     string filename = StackN.ToString();
-                    string path ="./Printouts/"+ filename;
-                    System.IO.File.WriteAllText(path, CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
-                    Console.Out.WriteLine("CCS: " + CloudCoinAreaValues);
-                    return path;
+                    if(Console.ReadKey().Key == ConsoleKey.Enter)
+                    {
+                        Console.Out.WriteLine("Stack: " + filename + " has been found");
+                        string CloudCoinAreaValues = CCS.ToString();
+                        string path ="./Printouts/"+ filename;
+                        try
+                        {
+                            System.IO.File.WriteAllText(path, CloudCoinAreaValues); //Create a document containing Mp3 ByteFile (debugging).
+                        }
+                        catch(Exception e)
+                        {
+                            Console.Out.WriteLine("Failed to save CloudCoin data {0}", e);
+                        }
+                    
+                        Console.Out.WriteLine("CCS: " + CloudCoinAreaValues);
+                        return path;
+                    }
+                    return "ERROR";
             }else{
                 Console.Out.WriteLine("no stack in file" + CCS);
                 return "no .stack in file";

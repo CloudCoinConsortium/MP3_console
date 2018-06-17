@@ -74,6 +74,7 @@ namespace AddToMp3
                         }
                     break;
                     case 4://Return .stack from .mp3
+                        Mp3File = TagLib.File.Create(Mp3Path);
                         if(Mp3File != null)
                         {
                             string mp3CurrentCoinStack = Methods.ReturnCloudCoinStack(Mp3File);
