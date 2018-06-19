@@ -19,7 +19,7 @@ namespace AddToMp3
             Console.OutputEncoding = FileEncoding; //set the console output.
             byte[] MyMp3 = System.IO.File.ReadAllBytes(Mp3Path);
             string ByteFile = Hex.Dump(MyMp3); //Store Hex the Hex data from the Mp3 file.
-            System.IO.File.WriteAllText("./Mp3HexPrintout.txt", ByteFile); //Create a document containing Mp3 ByteFile (debugging).
+            System.IO.File.WriteAllText("./Printouts/Mp3HexPrintout.txt", ByteFile); //Create a document containing Mp3 ByteFile (debugging).
         }
 
         ///Method ensures the mp3 file is encapsulated with the appropriate data.
@@ -78,7 +78,6 @@ namespace AddToMp3
             Console.Out.WriteLine( " stacks deleted.");
         }
 
-
         //Collects the stacks saved in the mp3 file. saves them in the printouts folder.
         public static string ReturnCloudCoinStack(TagLib.File Mp3File){
             TagLib.Ape.Tag ApeTag = Methods.CheckApeTag(Mp3File);
@@ -123,15 +122,23 @@ namespace AddToMp3
             try 
             {
                 string[] mp3FilePaths = Directory.GetFiles("./mp3", "*.mp3");
-                consolePrintList(mp3FilePaths, true, message);
-                string choice = mp3FilePaths[getUserInput(mp3FilePaths.Length, note)];
-                return choice;
+                consolePrintList(mp3FilePaths, true, message, true);
+                int selection = getUserInput(mp3FilePaths.Length, note, true);
+                if(selection > -1){
+                    string choice = mp3FilePaths[selection];
+                    return choice;
+                }
+                else
+                {
+                    return "null";
+                }
             } 
             catch (Exception e) 
             {
                 Console.Out.WriteLine("The process failed: {0}", e.ToString());
                 return e.ToString();
             }
+            
         }
 
         ///Get stacks from the bank, print them to the console. 
@@ -145,10 +152,22 @@ namespace AddToMp3
             {
                 string[] ccStackFilePaths = Directory.GetFiles("./Bank", "*.stack");
                 string note = "Select the file you wish to use.";
-                consolePrintList(ccStackFilePaths, true, message);
-                myStack[0] = ccStackFilePaths[getUserInput(ccStackFilePaths.Length, note)]; //Choose the cloudcoin to be added to the mp3.
-                myStack[1] = System.IO.File.ReadAllText(myStack[0]);//save the cloudcoin stack data.
-                myStack[2] = System.IO.Path.GetFileName(myStack[0]);//save the stacks name.
+                consolePrintList(ccStackFilePaths, true, message, true);
+                int selection = getUserInput(ccStackFilePaths.Length, note, true);
+                if(selection > -1)
+                {
+                    myStack[0] = ccStackFilePaths[selection]; //Choose the cloudcoin to be added to the mp3.
+                    myStack[1] = System.IO.File.ReadAllText(myStack[0]);//save the cloudcoin stack data.
+                    myStack[2] = System.IO.Path.GetFileName(myStack[0]);//save the stacks name.
+                    return myStack;
+                }//end if
+                else
+                {
+                     myStack[0] = "null";
+                     myStack[1] = "";
+                     myStack[2] = "";
+                    return myStack;
+                }
                 return myStack;
             } 
             catch (Exception e) 
@@ -160,11 +179,11 @@ namespace AddToMp3
         }
 
         //Method to prompt a user for input. 
-        public static int getUserInput(int maxNum, string message)
+        public static int getUserInput(int maxNum, string message, bool goBack)
         {     
             Console.Out.WriteLine("");
             Console.Out.WriteLine(message);
-            int choice = reader.readInt(1, maxNum);
+            int choice = reader.readInt(0, maxNum);
             return choice - 1;
         }
 
@@ -183,7 +202,7 @@ namespace AddToMp3
 
         //Methods accepts an array of strings. 
         //If indexed? indecese will be numbered 1 through selection.Length. 
-        public static void consolePrintList(string[] selection, bool indexed, string message){
+        public static void consolePrintList(string[] selection, bool indexed, string message, bool goBack){
             int index = 0;
             Console.Out.WriteLine("");
             Console.BackgroundColor = ConsoleColor.Blue;
@@ -194,7 +213,7 @@ namespace AddToMp3
             {   
                 
                 int fileLength = Console.WindowWidth - file.Length-1;
-
+                
                 if(indexed)
                 {
                  string newFile = String.Format("{0, -25}", file);
@@ -206,7 +225,15 @@ namespace AddToMp3
                 {
                     Console.Out.WriteLine("{0, -4} {1,"+fileLength+":N1}", file, " ");
                 }
-            }
+                
+            }//end foreach
+            if(goBack)
+            {
+                Console.WriteLine();
+                string backMsg = "Type '0' (Zero), then enter to go back.";
+                Console.Out.WriteLine("{0, -4} {1,"+(Console.WindowWidth - backMsg.Length-1)+":N1}", backMsg, " ");
+            }// end if
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
         }
@@ -223,8 +250,8 @@ namespace AddToMp3
             welcomeMsg[3] = "        This Software is provided as is with all faults, defects      ";
             welcomeMsg[4] = "            and errors, and without warranty of any kind.             ";
             welcomeMsg[5] = "                  Free from the CloudCoin Consortium.                 ";
-            consolePrintList(welcomeMsg, false, ""); //false? message is not indexed.
-            
+            consolePrintList(welcomeMsg, false, "", false); //1st bool true? message is indexed. 2nd bool, no goBack.
+            Console.WriteLine();
         } // End print options
 
         public static int printOptions()
@@ -239,8 +266,8 @@ namespace AddToMp3
             userChoices[5] = "Save .mp3's current state                                             "; //Option 6
             userChoices[6] = "Quit (remember to save!)                                              "; //Option 7
             userChoices[7] = "Show discriptions                                                     "; //Option 8
-            consolePrintList(userChoices, true, note); //true? message is indexed.
-            return getUserInput(8,note);//7? Range of inputs.
+            consolePrintList(userChoices, true, note, false); //1st bool true? message is indexed. 2nd bool, no goBack.
+            return getUserInput(8,note, false);//7? Range of inputs.
         } // End print welcome.
 
          public static int printHelp()
@@ -256,8 +283,8 @@ namespace AddToMp3
             userChoices[5] = "Changes made to the .mp3 file will be saved                           "; //Option 6
             userChoices[6] = "End this session, this option does not save changes to the mp3 file.  "; //Option 7
             userChoices[7] = "Standard menu                                                         "; //Option 8
-            consolePrintList(userChoices, true, note); //true? message is indexed.
-            return getUserInput(8,note);//7? Range of inputs.
+            consolePrintList(userChoices, true, note, false); //1st bool true? message is indexed. 2nd bool, no goBack.
+            return getUserInput(8,note, false);//7? Range of inputs.
         } // End print welcome
 
         public static void printStates(string[] states)
@@ -272,22 +299,14 @@ namespace AddToMp3
                 
             }
         }
+        public static void consoleGap(int multi){
+            
+            for(int i = 0; i < 5*multi; i++){
+                Console.Out.WriteLine("<--------------------------------------------------------------->");
+            }
+            Console.Out.WriteLine("<-------------------------BREAK------------------------------->");
+            Console.Out.WriteLine();
+        }
 
     }
 }
-        //CloudCoinNaming
-        // public static string stackNaming(string stack){
-        //     string Denomination = (Regex.Match(stack, @"^\d{1,3}").ToString()); //Match up to 3 of the first didgits of the files name. 
-        //     string cc = "cloudcoin"; //Always cloudcoin
-        //     string networkNum = (Regex.Match(stack, @"^\d{1,3}\.").ToString());
-        //     string serialNum = "";
-        //     string mintTag = (Regex.Match(stack, @".*"));
-        //     string fileExt = ".stack";
-
-
-        //     return stack;
-        // }
-
-        ///
-        ///Methods for console messages
-        ///
