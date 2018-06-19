@@ -176,23 +176,16 @@ namespace AddToMp3
                     {
                         bool isDeleted = Methods.RemoveExistingStacks(ApeTag);
                         Console.Out.WriteLine(isDeleted);
-                    if(isDeleted)
+                        if(isDeleted)
                         {
-                        Mp3File.Save();
-                        selectMp3();
-                            try
-                            {
-                                TagLib.Ape.Item StackN = ApeTag.GetItem("StackName");
-                                if(StackN.Size <= 10){
-                                    endState[2]=   Mp3File.Name + " no longer contains cloudcoin stack: " + StackN;
-                                    endState[4] = "Any existing stacks in " + Mp3File.Name + " have been deleted.";
-                                }
-                            }
-                            catch(Exception e)
-                            {
-                                Console.WriteLine("Error: ", e);
-                            }
+                            Mp3File.Save();
+                            selectMp3();// rerun code to update states.
+                            endState[4] = "Any existing stacks in " + Mp3File.Name + " have been deleted.";
                         }//end if (is Deleted)
+                        else
+                        {
+                            endState[4] = "Stacks in " + Mp3File.Name + " have not been properly deleted.";
+                        }
                     }//end if.
                     else
                     {

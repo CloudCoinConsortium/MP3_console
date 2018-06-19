@@ -8,17 +8,17 @@ Contains code and standards for the insertion of CloudCoins into layer 3 mpeg fi
 
 ## Summary of implementation
 
-1) Get_MP3_file().
-`Opens a browse window allows user to select the correct file.`
-2) Get_CloudCoin().
-`Opens a browse window allows user to select` **`multiple`** `files`
-3) CheckApeTag().
-`Checks file for APE Tag, returns the tag if it exists, creates of if none exist.`
-4) SetApeTagValue().
-`Inserts the CloudCoins as a value in a tag item named *CloudCoinContainer*.`
-5) ReturnCloudCoins().
-`Searches the files meta data for the key item *CloudCoinContainer* creates a file 'CloudCoinPrintout.json' and writes the data to the file.`
-6) Save()
+1) selectMp3().
+`Allows the user to target an Mp3 from the "mp3" folder. `
+2) selectStack().
+`Allows user to select the CloudCoin stack from a list of available stacks.`
+3) stackToMp3().
+`Inserts the CloudCoins as a value in an Ape tag item with a key of CloudCoinStack.`
+4) stackFromMp3().
+`Searches the file for the Ape's key item (cloudcoinstack), creates a new file with the stacks original name, then writes the data to the file.`
+5) deleteFromMp3().
+`Deletes any cloudcoinstacks associated with the mp3. The only function to save the files new state.`
+6) saveMp3()
 `Save changes made to the original mp3 file.`
 
 
@@ -28,50 +28,49 @@ Contains code and standards for the insertion of CloudCoins into layer 3 mpeg fi
     it serves as a proof of concept for storing CloudCoins in the meta tags of MP3 files.
 
 
-#### Get_MP3_file()
+#### selectMp3()
 
 Retrieve file-path to .mp3, store it as a string.
-```
-string FilePath = "< path to .mp3 >";
-```
 
-Using the TagLib-sharp library, and FilePath to get the Id3 header.
+Using the TagLib-sharp library, and FilePath to encapsulate the file with the correct information.
 ```
 TagLib.File Mp3File = TagLib.File.Create(FilePath);
 ```
 
-#### Get_CloudCoin()
+#### selectStack()
 
 Retrieve file-path to CloudCoin, store file content as a string.
 ```
-string MyCloudCoin = System.IO.File.ReadAllText("./text.txt", Encoding.ASCII);
+string MyCloudCoin = System.IO.File.ReadAllText(<CloudCoinStack-Path>, Encoding.ASCII);
 ```
 
-#### CheckApeTag()
+#### stackToMp3()
 
 Checks file for APE Tag, returns the tag if it exists, creates of if none exist.
 ```
 ApeTag = Methods.CheckApeTag(Mp3File)
 ```
+Inserts the CloudCoins as meta data in the Ape tag.
 
-#### SetApeTagValue()
+#### stackFromMp3()
 
-Inserts the CloudCoins as a value in a tag item named *CloudCoinContainer*.
+Returns the CloudCoins from the mp3 file, saves the stack in "./Printouts" with its original name.
 ```
-SetApeTagValue(ApeTag, MyCloudCoin);
+TagLib.Ape.Item CCS = ApeTag.GetItem("CloudCoinStack");
+return CCS.ToString();
 ```
 
 
-#### ReturnCloudCoins()
+#### deleteFromMp3()
 
-Searches the files meta data for the key item *CloudCoinContainer* creates a file 'CloudCoinPrintout.json' and writes the data to the file.
+Removes all references to the cloudcoin stacks, from the mp3's meta data.
 ```
-ReturnCloudCoins(ApeTag)
+Methods.RemoveExistingStacks(ApeTag)
 ```
 
 #### MP3 Standard
 Standards can be found in the standards folder.
-![MP3 Standard](./standards/Mp3_Footer.png?raw=true "MP3 Standard")
+![MP3 Standard](./standards/Mp3_Footer.png)
 
 
 ### References
