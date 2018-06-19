@@ -72,10 +72,18 @@ namespace AddToMp3
         }
 
         //Searches for and removes the specified Key and Value.
-        public static void RemoveExistingStacks(TagLib.Ape.Tag ApeTag){
-            ApeTag.RemoveItem("CloudCoinStack");
-            ApeTag.RemoveItem("StackName");
-            Console.Out.WriteLine( " stacks deleted.");
+        public static bool RemoveExistingStacks(TagLib.Ape.Tag ApeTag){
+            try{
+                ApeTag.RemoveItem("CloudCoinStack");
+                ApeTag.RemoveItem("StackName");
+                Console.Out.WriteLine( " stacks deleted.");
+            }
+            catch(Exception e)
+            {
+                Console.Out.WriteLine( "Error: ", e);
+                return false;
+            }
+    return true;
         }
 
         //Collects the stacks saved in the mp3 file. saves them in the printouts folder.

@@ -38,6 +38,7 @@ namespace AddToMp3
             while (makingChanges){
                 switch(userChoice){
                     case 1: //Select .mp3 file.
+                        Mp3Path = Methods.ReturnMp3FilePath(); //Save file path.
                         selectMp3();
                     break;
                     case 2://Select .stack file from Bank folder
@@ -85,7 +86,6 @@ namespace AddToMp3
 
             void selectMp3()
             {
-                Mp3Path = Methods.ReturnMp3FilePath(); //Save file path.
                 if(Mp3Path != "null")
                 {
                     Mp3File = TagLib.File.Create(Mp3Path); //Create TagLib file... ensures a Id3v2 header. 
@@ -171,10 +171,28 @@ namespace AddToMp3
             {
                     Console.Out.WriteLine("WARNING: you are about to permenantley delete any stack files found in " + Mp3File.Name);
                     Console.Out.WriteLine("Enter/Return to continue, Any other key to go back.");
+
                     if(Console.ReadKey(true).Key == ConsoleKey.Enter)
                     {
-                    Methods.RemoveExistingStacks(ApeTag);
-                    endState[4] = "Any existing stacks in " + Mp3File.Name + " have been deleted.";
+                        bool isDeleted = Methods.RemoveExistingStacks(ApeTag);
+                        Console.Out.WriteLine(isDeleted);
+                    if(isDeleted)
+                        {
+                        Mp3File.Save();
+                        selectMp3();
+                            try
+                            {
+                                TagLib.Ape.Item StackN = ApeTag.GetItem("StackName");
+                                if(StackN.Size <= 10){
+                                    endState[2]=   Mp3File.Name + " no longer contains cloudcoin stack: " + StackN;
+                                    endState[4] = "Any existing stacks in " + Mp3File.Name + " have been deleted.";
+                                }
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine("Error: ", e);
+                            }
+                        }//end if (is Deleted)
                     }//end if.
                     else
                     {
