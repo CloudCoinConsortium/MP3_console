@@ -70,8 +70,8 @@ ReturnCloudCoins(ApeTag)
 ```
 
 #### MP3 Standard
-
-![Alt text](./Mp3Standard.png?raw=true "MP3 Standard")
+Standards can be found in the standards folder.
+![Alt text](./standards/Mp3_Footer.png?raw=true "MP3 Standard")
 
 
 ### References

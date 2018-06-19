@@ -168,7 +168,6 @@ namespace AddToMp3
                      myStack[2] = "";
                     return myStack;
                 }
-                return myStack;
             } 
             catch (Exception e) 
             {
@@ -254,7 +253,7 @@ namespace AddToMp3
             Console.WriteLine();
         } // End print options
 
-        public static int printOptions()
+        public static int printOptions()//One of two possible dialogue screens the user is presented with.
         {
              string note = "Enter your selection: ";
             string[] userChoices = new string[8];
@@ -270,7 +269,7 @@ namespace AddToMp3
             return getUserInput(8,note, false);//7? Range of inputs.
         } // End print welcome.
 
-         public static int printHelp()
+         public static int printHelp()//One of two possible dialogue screens the user is presented with.
         {
             // string note = "message + " {0}.", selection.Length"
             string note = "Enter your selection: ";

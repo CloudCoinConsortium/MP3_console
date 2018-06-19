@@ -36,7 +36,6 @@ namespace AddToMp3
             Console.WriteLine("");
 
             while (makingChanges){
-
                 switch(userChoice){
                     case 1: //Select .mp3 file.
                         selectMp3();
@@ -101,7 +100,7 @@ namespace AddToMp3
                 }// end else.
             }// end selectMp3
 
-            void selectStack()
+            void selectStack()//External souce to be inserted in the mp3 file.
             {
                     try
                     {
@@ -122,7 +121,7 @@ namespace AddToMp3
                     Console.Out.WriteLine(endState[1]);
             }// end selectStack
 
-            void stackToMp3()
+            void stackToMp3()//the process of inserting the selected stack into the file.
             {
                     string cloudCoinStack = collectCloudCoinStack[1];
                     string stackName = collectCloudCoinStack[2];
@@ -147,7 +146,7 @@ namespace AddToMp3
                     }//end if
             }//end stackToMp3
 
-            void stackFromMp3()
+            void stackFromMp3()//returning the stack from the mp3
             {
                     Mp3File = TagLib.File.Create(Mp3Path);
                     if(Mp3File != null)
@@ -168,7 +167,8 @@ namespace AddToMp3
                     }//end else.
             } //end stackFromMp3
 
-            void deleteFromMp3(){
+            void deleteFromMp3()
+            {
                     Console.Out.WriteLine("WARNING: you are about to permenantley delete any stack files found in " + Mp3File.Name);
                     Console.Out.WriteLine("Enter/Return to continue, Any other key to go back.");
                     if(Console.ReadKey(true).Key == ConsoleKey.Enter)
@@ -191,6 +191,8 @@ namespace AddToMp3
                     Console.Out.WriteLine(endState[5]);
             }//end saveMp3
 
+
+            //Endstates are the 6 messages that are displayed to the user between actions.
             void resetEndStates(string filename, TagLib.Ape.Tag tag){
                 int length = endState.Length;
                 TagLib.Ape.Item StackN = tag.GetItem("StackName");
