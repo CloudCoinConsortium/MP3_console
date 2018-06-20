@@ -83,7 +83,7 @@ namespace AddToMp3
                 Console.Out.WriteLine( "Error: ", e);
                 return false;
             }
-    return true;
+            return true;
         }
 
         //Collects the stacks saved in the mp3 file. saves them in the printouts folder.

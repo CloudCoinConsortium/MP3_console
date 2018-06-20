@@ -70,6 +70,9 @@ Methods.RemoveExistingStacks(ApeTag)
 
 #### MP3 Standard
 Standards can be found in the standards folder.
+[Header](./standards/MP3_Header.png) [Body](./standards/MP3_Body.png) [Footer](./standards/MP3_Footer.png)
+
+
 ![MP3 Standard](./standards/MP3_Footer.png)
 
 
