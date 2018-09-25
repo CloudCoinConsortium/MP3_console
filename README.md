@@ -1,4 +1,5 @@
 # MP3 console app
+## Development on hold, 09/2018
 Contains code and standards for the insertion of CloudCoins into layer 3 mpeg files.
 
 
